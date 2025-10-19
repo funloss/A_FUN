@@ -112,6 +112,50 @@ def main():
         print(f"📄 文件名格式: 股票代码_股票名称_年月日.md")
     
     print("\n🎉 批量预测执行完成！")
+    
+    # 自动执行git push操作
+    print("\n📤 正在执行Git推送操作...")
+    try:
+        import subprocess
+        
+        # 添加所有预测报告文件
+        print("📥 添加预测报告文件...")
+        result = subprocess.run(['git', 'add', 'script/prediction/'], 
+                              capture_output=True, text=True, cwd='/Users/zhezhang/Documents/A')
+        if result.returncode != 0:
+            print(f"⚠️ 添加文件时出错: {result.stderr}")
+        else:
+            print("✅ 文件添加成功")
+        
+        # 提交更改
+        commit_message = f"📊 添加股票预测报告 - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        print(f"💾 提交更改: {commit_message}")
+        result = subprocess.run(['git', 'commit', '-m', commit_message], 
+                              capture_output=True, text=True, cwd='/Users/zhezhang/Documents/A')
+        if result.returncode != 0:
+            if "nothing to commit" in result.stderr:
+                print("ℹ️ 没有新的更改需要提交")
+            else:
+                print(f"⚠️ 提交时出错: {result.stderr}")
+        else:
+            print("✅ 提交成功")
+        
+        # 推送到远程仓库
+        print("🚀 推送到远程仓库...")
+        result = subprocess.run(['git', 'push'], 
+                              capture_output=True, text=True, cwd='/Users/zhezhang/Documents/A')
+        if result.returncode != 0:
+            print(f"⚠️ 推送时出错: {result.stderr}")
+        else:
+            print("✅ Git推送成功完成！")
+            print("📦 预测报告已上传到远程仓库")
+            
+    except FileNotFoundError:
+        print("⚠️ 未找到Git命令，请确保已安装Git")
+    except Exception as e:
+        print(f"⚠️ Git操作失败: {str(e)}")
+    
+    print("\n🎯 所有操作完成！")
 
 
 if __name__ == "__main__":
