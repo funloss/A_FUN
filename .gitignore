@@ -1,2 +1,6 @@
-# Script folder and all its contents
-script/
+# 忽略script文件夹中的Python文件和缓存
+script/*.py
+script/__pycache__/
+
+# 但允许跟踪prediction目录及其所有内容
+!script/prediction/
